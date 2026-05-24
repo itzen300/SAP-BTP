@@ -25,3 +25,19 @@ $ cf apps
 code to check the error as a form of logs=
 $ cf logs
 
+# SAP BTP Practical Tasks
+
+## Technologies
+- SAP CAP
+- Node.js
+- CDS
+- SAP BTP
+
+## Tasks
+- Logistics shipment management
+- CAP services
+- CSV data handling
+
+## How to Run
+npm install
+cds watch
