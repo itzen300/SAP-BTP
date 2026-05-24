@@ -25,8 +25,6 @@ $ cf apps
 code to check the error as a form of logs=
 $ cf logs
 
-# SAP BTP Practical Tasks
-
 ## Technologies
 - SAP CAP
 - Node.js
