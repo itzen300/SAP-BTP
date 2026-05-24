@@ -1,0 +1,54 @@
+template used form open git= git clone https://github.com/sap-samples/btp-developer-training-exam
+
+db/
+  schema.cds
+the script for the same is below=
+
+namespace exam.logistics;
+
+type TransportMode : String enum {
+    Air  = 'A';
+    Sea  = 'S';
+    Rail = 'R';
+}
+
+entity Shipments {
+    key ID           : String;
+    customer         : String;
+    mode             : TransportMode;
+
+    virtual totalWeight : Decimal(10,2);
+    virtual shippingFee : Decimal(10,2);
+
+    packages : Composition of many Packages
+        on packages.parent = $self;
+}
+
+entity Packages {
+    key ID       : String;
+    contents     : String;
+    weight       : Decimal(10,2);
+
+    parent : Association to Shipments;
+}
+
+
+db/
+  data/
+      exam.logistics-shipments.csv
+the script for the same is below=
+
+ID,customer,mode
+AA-123,Alpha Corp,A
+BB-456,Beta Ltd,S
+
+
+db/
+  data/
+      exam.logistics-packages.csv
+the script for the same is below=
+
+ID,contents,weight,parent_ID
+P1,Package 1,10,AA-123
+P2,Package 2,5.5,AA-123
+P3,Package 3,100,BB-456

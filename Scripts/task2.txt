@@ -1,0 +1,66 @@
+srv/
+   logistics-service.cds
+the script for the same is below=
+
+using { exam.logistics as db } from '../db/schema';
+
+service LogisticsService @(path:'/logistics') {
+
+    entity Shipments as projection on db.Shipments;
+
+    @readonly
+    entity Packages as projection on db.Packages;
+}
+
+
+srv/
+   logistics-service.js
+the script for the same is below=
+
+module.exports = cds.service.impl(async function () {
+
+    const { Shipments, Packages } = this.entities;
+
+    this.after('READ', 'Shipments', async (data) => {
+
+        if (!Array.isArray(data)) {
+            data = [data];
+        }
+
+        for (const shipment of data) {
+
+            const packages = await SELECT.from(Packages)
+                .where({ parent_ID: shipment.ID });
+
+            let totalWeight = 0;
+
+            for (const pkg of packages) {
+                totalWeight += Number(pkg.weight);
+            }
+
+            shipment.totalWeight = totalWeight;
+
+            let rate = 0;
+
+            switch (shipment.mode) {
+                case 'A':
+                    rate = 15;
+                    break;
+
+                case 'S':
+                    rate = 5;
+                    break;
+
+                case 'R':
+                    rate = 8;
+                    break;
+            }
+
+            shipment.shippingFee = totalWeight * rate;
+        }
+    });
+});
+
+
+the site on which it will be show will be=
+http://localhost:4004/logistics/Shipments
